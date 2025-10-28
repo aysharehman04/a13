@@ -11,6 +11,7 @@ Integrates multiple strategies: minimax, alphabeta, and MCTS.
 import random
 import math
 from a1_state import State
+import timeit
 
 class Agent:
     def __init__(self, size, name='B1'):
@@ -19,7 +20,7 @@ class Agent:
         self.modes = ['minimax', 'alphabeta', 'mcts']
 
     def __str__(self):
-        return f"Agent name: {self.name}, board size: {self.size}, Modes: {self.modes}"
+        return f"Agent name: {self.name}, Board size: {self.size}, Modes: {self.modes}"
 
    
     def move(self, state, mode='mcts'):
@@ -81,7 +82,7 @@ class Agent:
             return best_score, best_move
 
     
-    def alphabeta_move(self, state, alpha, beta, depth=3, max_player=True):
+    def alphabeta_move(self, state,alpha=float("-inf"), beta=float("inf"), depth=3, max_player=True):
         #base case:
         if depth == 0 or self.is_terminal(state):
             return self.evaluate(state), None
@@ -194,6 +195,30 @@ def tester():
         [0, 0, 0, 1, 1]
     ]
     sa = State(sa_grid)
+    print("Is terminal?",agent.is_terminal(sa))
+    print("\n")
+
+
+    print("Testing Minimax:")
+    def run_minimax():
+        score, move = agent.minimax_move(sa)
+        # print(score, move)
+        print("\n")
+
+    avg_time = timeit.timeit(run_minimax, number=10) / 10
+    print(f"Average Minimax time over 10 runs: {avg_time:.6f} seconds")
+
+    print("Testing Alphabeta:")
+    def run_alphabeta():
+        score, move = agent.alphabeta_move(sa)
+        # print(score, move)
+        print("\n")
+
+    avg_time = timeit.timeit(run_alphabeta, number=10) / 10
+    print(f"Average alphabeta time over 10 runs: {avg_time:.6f} seconds")
+
+
+    
 
     print("\nAgent selects a move using MCTS:")
     move = agent.move(sa, 'mcts')

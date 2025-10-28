@@ -38,6 +38,9 @@ class Agent:
             raise ValueError(f"Unknown mode: {mode}")
 
     def is_terminal(self, state):
+        if self.win():
+            print("This state is in a winning position for the player whose turn is to move")
+            return True
         for row in state.grid:
             for cell in row:
                 if cell > 0: # found a move
@@ -45,7 +48,7 @@ class Agent:
         return True # no moves found
 
     def win(self, state):
-        return self.is_terminal(state)
+        return state.numHingers() > 0
 
     def evaluate(self,state):
         total_move_cost = sum(state.move_cost(r, c)
